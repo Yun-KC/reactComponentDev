@@ -1,7 +1,6 @@
-import styled from 'styled-components';
-
+import { Container } from './react-dnd/Container';
 function App() {
-  return <div className='App'></div>;
+  return <Container></Container>;
 }
 
 export default App;
