@@ -1,8 +1,8 @@
-// import styled from 'styled-components';
 import update from 'immutability-helper';
 import { memo, useCallback, useState } from 'react';
-import { ItemTypes } from './itemType';
+import { ItemTypes } from './ItemType';
 import { Card } from './Card';
+import { useDrop } from 'react-dnd';
 import styled from 'styled-components';
 
 const ITEMS = [
@@ -61,14 +61,41 @@ const CardContainer = styled.div`
 `;
 export const Container = memo(() => {
   const [cards, setCards] = useState(ITEMS);
-  const findCard = useCallback(() => {}, []);
-  const moveCard = useCallback(() => {}, []);
+  const findCard = useCallback(
+    (id) => {
+      const card = cards.filter((c) => `${c.id}` === id)[0];
+      return {
+        card,
+        index: cards.indexOf(card),
+      };
+    },
+    [cards]
+  );
+  const moveCard = useCallback(
+    (id, atIndex) => {
+      const { card, index } = findCard(id);
+      setCards(
+        update(cards, {
+          $splice: [
+            [index, 1],
+            [atIndex, 0, card],
+          ],
+        })
+      );
+    },
+    [findCard, cards, setCards]
+  );
+  const [, drop] = useDrop(() => ({
+    accept: ItemTypes.CARD,
+  }));
 
   return (
-    <CardContainer>
-      {cards.map(({ text, color }) => {
-        return <Card text={text} color={color}></Card>;
-      })}
-    </CardContainer>
+    <>
+      <CardContainer ref={drop}>
+        {cards.map(({ text, color, id }) => {
+          return <Card text={text} key={id} color={color} moveCard={moveCard} id={`${id}`} findCard={findCard}></Card>;
+        })}
+      </CardContainer>
+    </>
   );
 });
