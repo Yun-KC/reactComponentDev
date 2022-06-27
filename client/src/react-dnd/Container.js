@@ -10,70 +10,73 @@ const ITEMS = [
     id: 1,
     text: "자바스크립트",
     color: "#FEF9A7",
-    area: "one",
+    area: 0,
   },
   {
     id: 2,
     text: "노드JS",
     color: "#FAC213",
-    area: "two",
+    area: 1,
   },
   {
     id: 3,
     text: "운영체제",
     color: "#F77E21",
-    area: "three",
+    area: 2,
   },
   {
     id: 4,
     text: "HTTP 완벽가이드",
     color: "#D61C4E",
-    area: "four",
+    area: 3,
   },
   {
     id: 5,
     text: "SQL 레벨업",
     color: "#FFCC8F",
-    area: "five",
+    area: 4,
   },
   {
     id: 6,
     text: "Nest JS",
     color: "#A760FF",
-    area: "six",
+    area: 5,
   },
   {
     id: 7,
     text: "React",
     color: "#F6C6EA",
-    area: "seven",
+    area: 6,
   },
   {
     id: 8,
     text: "영어 공부",
     color: "#1F4690",
-    area: "eight",
+    area: 7,
   },
   {
     id: 9,
     text: "CSS 설계 가이드",
     color: "#635666",
-    area: "nine",
+    area: 8,
   },
 ];
 const CardContainer = styled.div`
-  width: 50%;
-  height: 50%;
+  width: 900px;
+  height: 900px;
   overflow: hidden;
   position: relative;
   font-size: 0px;
+  transition: all 0.5s;
 `;
 // grid-auto-rows: 1fr
 // grid-auto-columnn: 1fr
 export const Container = memo(() => {
   const [cards, setCards] = useState(ITEMS);
   const [isLodding, setisLodding] = useState(false);
+  const [container, setContainer] = useState(null);
   useEffect(() => {
+    setContainer(document.querySelector(".container"));
     setisLodding(true);
   }, []);
 
@@ -110,8 +113,20 @@ export const Container = memo(() => {
     <>
       <CardContainer ref={drop} className="container">
         {isLodding
-          ? cards.map(({ text, color, id }) => {
-              return <Card text={text} key={id} color={color} moveCard={moveCard} id={`${id}`} findCard={findCard}></Card>;
+          ? cards.map(({ text, color, id, area }, idx) => {
+              return (
+                <Card
+                  text={text}
+                  key={id}
+                  color={color}
+                  originalIndex={idx}
+                  moveCard={moveCard}
+                  id={`${id}`}
+                  findCard={findCard}
+                  container={container}
+                  area={area}
+                ></Card>
+              );
             })
           : null}
       </CardContainer>
