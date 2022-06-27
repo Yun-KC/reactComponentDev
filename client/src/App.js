@@ -1,6 +1,7 @@
-import { Container } from './react-dnd/Container';
+import { Container } from "./react-dnd/Container";
+
 function App() {
-  return <Container></Container>;
+  return <Container />;
 }
 
 export default App;
