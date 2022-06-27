@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { ItemTypes } from "./ItemType";
 import { Card } from "./Card";
 import { useDrop } from "react-dnd";
@@ -64,19 +64,19 @@ const ITEMS = [
 const CardContainer = styled.div`
   width: 50%;
   height: 50%;
-  display: grid;
-  transition: all 1s;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-areas:
-    "one two three"
-    "four five six"
-    "seven eight nine";
+  overflow: hidden;
+  position: relative;
+  font-size: 0px;
 `;
 // grid-auto-rows: 1fr
 // grid-auto-columnn: 1fr
 export const Container = memo(() => {
   const [cards, setCards] = useState(ITEMS);
+  const [isLodding, setisLodding] = useState(false);
+  useEffect(() => {
+    setisLodding(true);
+  }, []);
+
   const findCard = useCallback(
     (id) => {
       const card = cards.filter((c) => `${c.id}` === id)[0];
@@ -89,12 +89,16 @@ export const Container = memo(() => {
   );
   const moveCard = useCallback(
     //sourceId, targetId
-    (sourceId, targetId) => {
-      const { card: sourceCard, index: sourceIdx } = findCard(sourceId);
-      const { card: targetCard, index: targetIdx } = findCard(targetId);
-      const sourceArea = sourceCard.area;
-      const targetArea = targetCard.area;
-      setCards(update(cards, { [sourceIdx]: { area: { $set: targetArea } }, [targetIdx]: { area: { $set: sourceArea } } }));
+    (id, atIndex) => {
+      const { card, index } = findCard(id);
+      setCards(
+        update(cards, {
+          $splice: [
+            [index, 1],
+            [atIndex, 0, card],
+          ],
+        })
+      );
     },
     [findCard, cards, setCards]
   );
@@ -104,13 +108,19 @@ export const Container = memo(() => {
 
   return (
     <>
-      <CardContainer ref={drop}>
-        {cards.map(({ text, color, id, area }) => {
-          return <Card text={text} key={id} area={area} color={color} moveCard={moveCard} id={`${id}`} findCard={findCard}></Card>;
-        })}
+      <CardContainer ref={drop} className="container">
+        {isLodding
+          ? cards.map(({ text, color, id }) => {
+              return <Card text={text} key={id} color={color} moveCard={moveCard} id={`${id}`} findCard={findCard}></Card>;
+            })
+          : null}
       </CardContainer>
     </>
   );
 });
 
 // TODO: 카드가 이동할 때 트랜지션 속성으로 천천히 이동하는 에니매이션구현
+
+// {cards.map(({ text, color, id }) => {
+//   return <Card text={text} key={id} color={color} moveCard={moveCard} id={`${id}`} findCard={findCard}></Card>;
+// })}

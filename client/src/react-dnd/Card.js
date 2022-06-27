@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemType";
 import styled from "styled-components";
@@ -8,16 +8,19 @@ const CardDiv = styled.div`
   text-align: center;
   line-height: 100px;
   overflow: hidden;
-  grid-area: ${({ area }) => {
-    return area;
-  }};
-  transition: all 1s;
+  display: inline-block;
+  width: 300px;
+  height: 300px;
 `;
-// transition: width 2s, height 2s, background-color 2s, transform 2s;
+// transition: all 2s;
 // "#" + Math.round(Math.random() * 0xffffff).toString(16)
-export const Card = memo(({ id, text, moveCard, findCard, color, area }) => {
-  console.log(text, "리렌더");
+
+const locationCalculator = (num, parentWidth, parentHeight) => {};
+const $container = document.querySelector(".container");
+
+export const Card = memo(({ id, text, moveCard, findCard, color }) => {
   const originalIndex = findCard(id).index;
+
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
@@ -33,7 +36,7 @@ export const Card = memo(({ id, text, moveCard, findCard, color, area }) => {
         const didDrop = monitor.didDrop();
         console.log(didDrop);
         if (!didDrop) {
-          moveCard(droppedId, droppedId);
+          moveCard(droppedId, originalIndex);
         }
       },
     }),
@@ -45,15 +48,17 @@ export const Card = memo(({ id, text, moveCard, findCard, color, area }) => {
       //hover는 드래그 중인 아이템의 정보임
       hover({ id: draggedId }) {
         if (draggedId !== id) {
-          moveCard(id, draggedId);
+          const { index: overIndex } = findCard(id);
+          moveCard(draggedId, overIndex);
         }
       },
     }),
     [findCard, moveCard]
   );
   const opacity = isDragging ? 0.5 : 1;
+
   return (
-    <CardDiv color={color} opacity={opacity} area={area} ref={(node) => drag(drop(node))}>
+    <CardDiv color={color} opacity={opacity} ref={(node) => drag(drop(node))}>
       {text}
       <br />
       {originalIndex}
