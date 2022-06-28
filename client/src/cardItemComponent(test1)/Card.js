@@ -4,10 +4,10 @@ import { ItemTypes } from "./ItemType";
 import styled from "styled-components";
 const CardDiv = styled.div`
   background-color: ${({ color }) => color};
-  /* opacity: ${({ opacity }) => opacity}; */
+  opacity: ${({ opacity }) => opacity};
   text-align: center;
   line-height: 100px;
-  overflow: hidden;
+  overflow: visible;
   display: inline-block;
   width: 33.33%;
   height: 33.33%;
@@ -16,7 +16,11 @@ const CardDiv = styled.div`
   left: ${({ left }) => left}px;
   top: ${({ top }) => top}px;
   transition: all 0.5s;
-  /* z-index: ${({ isDragging }) => (isDragging ? 1 : 0)}; */
+  border: 1px solid red;
+  &:hover {
+    z-index: 1;
+    transform: scale(1.1);
+  }
 `;
 // transition: all 2s;
 // "#" + Math.round(Math.random() * 0xffffff).toString(16)
@@ -45,42 +49,29 @@ export const Card = memo(({ id, text, moveCard, findCard, color, container, orig
           isDragging: monitor.isDragging(),
         };
       },
-      end: (item, monitor) => {
-        const { id: droppedId } = item;
-        // 타겟에 드랍되면 true
-        const didDrop = monitor.didDrop();
-        if (!didDrop) {
-          moveCard(droppedId, droppedId);
-        }
-      },
     }),
     [id, originalIndex, moveCard]
   );
 
-  let timer = null;
-
   const [, drop] = useDrop(
     () => ({
       accept: ItemTypes.CARD,
-      //hover는 드래그 중인 아이템의 정보임
-      hover({ id: draggedId }) {
-        if (timer) {
-          clearTimeout(timer);
+      drop({ id: draggedId }, a) {
+        if (draggedId !== id) {
+          const {
+            card: { id: targetId },
+          } = findCard(id);
+          moveCard(draggedId, targetId);
         }
-        timer = setTimeout(() => {
-          if (draggedId !== id) {
-            const {
-              card: { id: targetId },
-            } = findCard(id);
-            moveCard(draggedId, targetId);
-          }
-        }, 100);
       },
     }),
     [findCard, moveCard]
   );
   const opacity = isDragging ? 0.5 : 1;
 
+  const test = () => {
+    console.log("호출됩니까?");
+  };
   return (
     <CardDiv
       color={color}
@@ -89,6 +80,7 @@ export const Card = memo(({ id, text, moveCard, findCard, color, container, orig
       left={position.left}
       top={position.top}
       isDragging={isDragging}
+      onDragOver={test}
     >
       {text}
       <br />

@@ -1,4 +1,4 @@
-import { Container } from "./react-dnd/Container";
+import { Container } from "./cardItemComponent(select)/Container";
 
 function App() {
   return (

@@ -4,58 +4,58 @@ import { ItemTypes } from "./ItemType";
 import { Card } from "./Card";
 import { useDrop } from "react-dnd";
 import styled from "styled-components";
-
+import { v4 as uuidv4 } from "uuid";
 const ITEMS = [
   {
-    id: 1,
+    id: uuidv4(),
     text: "자바스크립트",
     color: "#FEF9A7",
     area: 0,
   },
   {
-    id: 2,
+    id: uuidv4(),
     text: "노드JS",
     color: "#FAC213",
     area: 1,
   },
   {
-    id: 3,
+    id: uuidv4(),
     text: "운영체제",
     color: "#F77E21",
     area: 2,
   },
   {
-    id: 4,
+    id: uuidv4(),
     text: "HTTP 완벽가이드",
     color: "#D61C4E",
     area: 3,
   },
   {
-    id: 5,
+    id: uuidv4(),
     text: "SQL 레벨업",
     color: "#FFCC8F",
     area: 4,
   },
   {
-    id: 6,
+    id: uuidv4(),
     text: "Nest JS",
     color: "#A760FF",
     area: 5,
   },
   {
-    id: 7,
+    id: uuidv4(),
     text: "React",
     color: "#F6C6EA",
     area: 6,
   },
   {
-    id: 8,
+    id: uuidv4(),
     text: "영어 공부",
     color: "#1F4690",
     area: 7,
   },
   {
-    id: 9,
+    id: uuidv4(),
     text: "CSS 설계 가이드",
     color: "#635666",
     area: 8,

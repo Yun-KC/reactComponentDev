@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useRef } from "react";
+import { memo, useCallback, useMemo, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemType";
 import styled from "styled-components";
@@ -9,14 +9,12 @@ const CardDiv = styled.div`
   line-height: 100px;
   overflow: hidden;
   display: inline-block;
-  width: 33.33%;
-  height: 33.33%;
+  width: 80%;
+  height: 10%;
   font-size: 16px;
-  position: absolute;
-  left: ${({ left }) => left}px;
-  top: ${({ top }) => top}px;
   transition: all 0.5s;
-  z-index: ${({ isDragging }) => (isDragging ? 1 : 0)};
+  transform: scale(${({ isHover }) => (isHover ? 1.5 : 1)});
+  /* z-index: ${({ isDragging }) => (isDragging ? 1 : 0)}; */
 `;
 // transition: all 2s;
 // "#" + Math.round(Math.random() * 0xffffff).toString(16)
@@ -25,17 +23,9 @@ const CardDiv = styled.div`
 // const locationCalculator = (num, width, height) => {};
 
 export const Card = memo(({ id, text, moveCard, findCard, color, container, originalIndex }) => {
-  const position = useMemo(() => {
-    //가로아이템 개수를 받기. 현재 가로 아이템 개수 3개 = 임시
-    const width = container.clientWidth / 3;
-    const height = container.clientHeight / 3;
-    // 가로에서 몇번째인가?
-    const numOfCol = Math.floor(originalIndex / 3);
-    // 새로에서 몇층인가?
-    const numOfRow = Math.floor(originalIndex % 3);
-    return { left: width * numOfRow, top: height * numOfCol };
-  }, [originalIndex, container]);
-
+  const test = useCallback(() => {
+    /* 아이템 드래그 중에  */
+  });
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
@@ -56,30 +46,25 @@ export const Card = memo(({ id, text, moveCard, findCard, color, container, orig
     }),
     [id, originalIndex, moveCard]
   );
-  const [, drop] = useDrop(
+  const [{ isHover }, drop] = useDrop(
     () => ({
       accept: ItemTypes.CARD,
       //hover는 드래그 중인 아이템의 정보임
-      hover({ id: draggedId }) {
+      drop({ id: draggedId }) {
         if (draggedId !== id) {
           const { index: overIndex } = findCard(id);
           moveCard(draggedId, overIndex);
         }
       },
+      collect: (monitor) => {
+        return { isHover: monitor.isOver() && monitor.getItem().id !== id };
+      },
     }),
     [findCard, moveCard]
   );
   const opacity = isDragging ? 0.5 : 1;
-
   return (
-    <CardDiv
-      color={color}
-      opacity={opacity}
-      ref={(node) => drag(drop(node))}
-      left={position.left}
-      top={position.top}
-      isDragging={isDragging}
-    >
+    <CardDiv color={color} opacity={opacity} ref={(node) => drag(drop(node))} isHover={isHover} isDragging={isDragging}>
       {text}
       <br />
       {originalIndex}

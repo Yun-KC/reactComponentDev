@@ -64,7 +64,7 @@ const ITEMS = [
 const CardContainer = styled.div`
   width: 900px;
   height: 900px;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
   font-size: 0px;
   transition: all 0.5s;
