@@ -1,4 +1,4 @@
-import { Container } from "./cardItemComponent(select)/Container";
+import { Container } from './cardItemComponent(select)/Container';
 
 function App() {
   return (
