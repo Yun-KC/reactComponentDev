@@ -11,6 +11,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-motion": "^0.5.2",
     "react-scripts": "^5.0.1",
     "react-transition-group": "^4.4.2",
     "styled-components": "^5.3.5",
