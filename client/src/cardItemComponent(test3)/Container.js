@@ -5,6 +5,8 @@ import { Card } from "./Card";
 import { useDrop } from "react-dnd";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+import { Motion, spring } from "react-motion";
+
 const ITEMS = [
   {
     id: uuidv4(),
@@ -115,17 +117,24 @@ export const Container = memo(() => {
         {isLodding
           ? cards.map(({ text, color, id, area }, idx) => {
               return (
-                <Card
-                  text={text}
-                  key={id}
-                  color={color}
-                  originalIndex={idx}
-                  moveCard={moveCard}
-                  id={`${id}`}
-                  findCard={findCard}
-                  container={container}
-                  area={area}
-                ></Card>
+                <Motion key={idx} style={{ y: spring(area * 80, { stiffness: 500, damping: 200 }) }}>
+                  {({ y }) => (
+                    <Card
+                      text={text}
+                      key={id}
+                      color={color}
+                      originalIndex={idx}
+                      moveCard={moveCard}
+                      id={`${id}`}
+                      findCard={findCard}
+                      container={container}
+                      area={area}
+                      style={{
+                        transform: "translate3d(0, " + y + "px, 0)",
+                      }}
+                    ></Card>
+                  )}
+                </Motion>
               );
             })
           : null}
