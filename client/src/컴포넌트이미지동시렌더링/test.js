@@ -4,21 +4,24 @@
 // 그럼 이미지가 도착하는 동시에 컴포넌트를 렌더링할 수 있을까?
 
 import { useEffect, useState } from 'react';
-function Test() {
+export default function Test() {
   const [isLoding, setIsLoding] = useState(false);
   const [imgsrc, setImgsrc] = useState(null);
   useEffect(() => {
-    fetch('https://source.unsplash.com/random/700x1080')
-      .then((data) => {
-        return data.blob();
-      })
-      .then((data) => {
-        const img = URL.createObjectURL(data);
-        console.log(img);
-        setImgsrc(img);
-        setIsLoding(true);
-      });
+    const img = new Image();
+    setTimeout(() => {
+      img.src = 'https://source.unsplash.com/random/700x1080';
+    }, 3000);
+
+    img.onload = () => {
+      console.log('이미지.src 에 url을 넣으면 자동으로 온로드 이벤트가 발생되는구나?');
+      onLoadHandler(img.src);
+    };
   }, []);
+  const onLoadHandler = (img) => {
+    setImgsrc(img);
+    setIsLoding(true);
+  };
   return (
     <>
       {isLoding ? (
