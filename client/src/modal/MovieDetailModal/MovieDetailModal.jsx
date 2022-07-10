@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { MdClose } from "react-icons/md";
-import useModal from "./useModal";
+import useModal from "../useModal";
 
 const Background = styled.div`
   width: 100%;

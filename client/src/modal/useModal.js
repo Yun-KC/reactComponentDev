@@ -4,8 +4,8 @@ import { modalState } from "./modalRecoil";
 export default function useModal() {
   const [modal, setModal] = useRecoilState(modalState);
 
-  const showModal = ({ modalType, modalProps }) => {
-    setModal({ modalType, modalProps });
+  const showModal = ({ modalType, modalProps, onSubmit }) => {
+    setModal({ modalType, modalProps, onSubmit });
   };
 
   const hideModal = () => {

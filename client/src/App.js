@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { MovieDetailModal } from "./modal/MovieDetailModal";
-import { MovieDetialModalVO, MOVIE_DETIAL_MODAL_TYPE } from "./modal/MovieDetailModalVO";
+import { MovieDetialModalVO, MOVIE_DETIAL_MODAL_TYPE } from "./modal/MovieDetailModal/MovieDetailModalVO";
 import useModal from "./modal/useModal";
 import data from "./data.json";
 
@@ -17,9 +16,10 @@ function App() {
   const test = () => {
     setModal({
       modalType: MOVIE_DETIAL_MODAL_TYPE,
-      modalProps: new MovieDetialModalVO(data, () => {
-        console.log("안뇽");
-      }),
+      modalProps: new MovieDetialModalVO(data),
+      onSubmit: () => {
+        console.log("hi");
+      },
     });
   };
   return (
