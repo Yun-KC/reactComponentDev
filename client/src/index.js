@@ -4,15 +4,16 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import App from "./App";
 import GlobalStyle from "./GlobalStyle";
+import { ModalContextProvider } from "./modal/ModalContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <>
-      <GlobalStyle />
-      <DndProvider backend={HTML5Backend}>
+  <>
+    <GlobalStyle />
+    <DndProvider backend={HTML5Backend}>
+      <ModalContextProvider>
         <App />
-      </DndProvider>
-    </>
-  </React.StrictMode>
+      </ModalContextProvider>
+    </DndProvider>
+  </>
 );
