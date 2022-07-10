@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { useState, useContext } from "react";
+import { MovieDetailModal } from "./modal/MovieDetailModal";
+import { MovieDetialModalVO, MOVIE_DETIAL_MODAL_TYPE } from "./modal/MovieDetailModalVO";
+import useModal from "./modal/useModal";
 import data from "./data.json";
-import { ModalContextProvider, ModalContext } from "./modal/ModalContext";
+
 const Button = styled.button`
   min-width: 100px;
   background: #000;
@@ -11,15 +13,18 @@ const Button = styled.button`
 `;
 
 function App() {
-  const { openModal } = useContext(ModalContext);
+  const { setModal } = useModal();
+  const test = () => {
+    setModal({
+      modalType: MOVIE_DETIAL_MODAL_TYPE,
+      modalProps: new MovieDetialModalVO(data, () => {
+        console.log("안뇽");
+      }),
+    });
+  };
   return (
     <>
-      <div>{"반짝 반짝작은 별"}</div>
-      <button
-        onClick={() => {
-          openModal(data);
-        }}
-      ></button>
+      <Button onClick={test}>무야야야야</Button>
     </>
   );
 }

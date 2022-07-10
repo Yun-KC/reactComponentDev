@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { MdClose } from "react-icons/md";
+import useModal from "./useModal";
 
 const Background = styled.div`
   width: 100%;
@@ -63,28 +64,31 @@ const CloseModalButton = styled(MdClose)`
   z-index: 10;
 `;
 
-export const MovieDetailModal = ({ showModal, setShowModal, data, setLike }) => {
+export const MovieDetailModal = ({ data, onSubmit }) => {
   const modalRef = useRef();
+  const { hideModal } = useModal();
   const [favorite, setFavorite] = useState(data.like);
 
   const favoriteHandler = () => {
     // TODO: api 요청 후 성공 시 setFavorite(!favorite);
     // setLike().then(result => {}).catch(result => {});
+    onSubmit();
+    setFavorite(!favorite);
   };
 
   const closeModal = (event) => {
     if (modalRef.current === event.target) {
-      setShowModal(false);
+      hideModal();
     }
   };
 
   const keyPress = useCallback(
     (event) => {
-      if (event.key === "Escape" && showModal) {
-        setShowModal(false);
+      if (event.key === "Escape") {
+        hideModal();
       }
     },
-    [setShowModal, showModal]
+    [hideModal]
   );
 
   useEffect(() => {
@@ -94,30 +98,31 @@ export const MovieDetailModal = ({ showModal, setShowModal, data, setLike }) => 
 
   return (
     <>
-      {showModal ? (
-        <Background onClick={closeModal} ref={modalRef}>
-          <ModalWrapper showModal={showModal}>
-            <ModalImg src={data.cover_image} alt={data.title} />
-            <ModalContent>
-              <h1>{data.title}</h1>
-              <p>{data.summary}</p>
-              <button onClick={favoriteHandler}>{favorite ? "하트" : "빈 하트"}</button>
-            </ModalContent>
-            <CloseModalButton aria-label="Close modal" onClick={() => setShowModal((show) => !show)} />
-          </ModalWrapper>
-        </Background>
-      ) : null}
+      <Background onClick={closeModal} ref={modalRef}>
+        <ModalWrapper>
+          <ModalImg src={data.cover_image} alt={data.title} />
+          <ModalContent>
+            <h1>{data.title}</h1>
+            <p>{data.summary}</p>
+            <button onClick={favoriteHandler}>{favorite ? "하트" : "빈 하트"}</button>
+          </ModalContent>
+          <CloseModalButton aria-label="Close modal" onClick={() => hideModal()} />
+        </ModalWrapper>
+      </Background>
     </>
   );
 };
+
 MovieDetailModal.defaultProps = {
-  title: null,
-  year: null,
-  rating: null,
-  summary: null,
-  background_image: null,
-  cover_image: null,
-  like: false,
+  data: {
+    title: null,
+    year: null,
+    rating: null,
+    summary: null,
+    background_image: null,
+    cover_image: null,
+    like: false,
+  },
 };
 
 // TODO: prop-types 적용하기 https://ko.reactjs.org/docs/typechecking-with-proptypes.html
