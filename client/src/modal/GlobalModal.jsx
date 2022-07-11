@@ -18,7 +18,7 @@ const GlobalModal = () => {
       return null;
     }
     const ModalComponent = MODAL_COMPONENTS[modalType];
-    return <ModalComponent data={modalProps.data} onSubmit={onSubmit} />;
+    return <ModalComponent data={modalProps} onSubmit={onSubmit} />;
   };
 
   return <>{renderComponent()}</>;

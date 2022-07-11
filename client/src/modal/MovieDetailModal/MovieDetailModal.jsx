@@ -65,6 +65,7 @@ const CloseModalButton = styled(MdClose)`
 `;
 
 export const MovieDetailModal = ({ data, onSubmit }) => {
+  console.log(data.cover_image);
   const modalRef = useRef();
   const { hideModal } = useModal();
   const [favorite, setFavorite] = useState(data.like);
@@ -100,7 +101,7 @@ export const MovieDetailModal = ({ data, onSubmit }) => {
     <>
       <Background onClick={closeModal} ref={modalRef}>
         <ModalWrapper>
-          <ModalImg src={data.cover_image} alt={data.title} />
+          <ModalImg src={data.cover_image.src} alt={data.title} />
           <ModalContent>
             <h1>{data.title}</h1>
             <p>{data.summary}</p>
